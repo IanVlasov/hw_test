@@ -3,7 +3,7 @@
 ## Prerequisites
 * [Poetry](https://python-poetry.org/docs/#installation)
 
-To run the code from the notebook it is needed to in stall Poetry.
+To run the code from the notebook it is needed to install Poetry.
 After installation run 
 ```
 poetry install
