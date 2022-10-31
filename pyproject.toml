@@ -1,0 +1,89 @@
+[tool.poetry]
+name = "hw-test"
+version = "0.1.0"
+description = ""
+authors = ["Yan Vlasov <vlasov.yan.ed@gmail.com>"]
+readme = "README.md"
+packages = [{include = "hw_test"}]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.11"
+jupyter = "^1.0.0"
+pandas = "^1.5.1"
+numpy = "^1.23.4"
+matplotlib = "3.5"
+jupyterlab = "^3.5.0"
+pandas-profiling = "^3.4.0"
+scikit-learn = "^1.1.2"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^0.982"
+isort = "^5.10.1"
+pylint = "^2.15.5"
+black = {version = "^22.10.0", extras = ["d"]}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+# https://github.com/psf/black
+target-version = ["py39"]
+line-length = 100
+color = true
+
+exclude = '''
+/(
+    \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | env
+    | venv
+)/
+'''
+
+[tool.isort]
+# https://github.com/timothycrosley/isort/
+py_version = 39
+line_length = 100
+
+known_typing = ["typing", "types", "typing_extensions", "mypy", "mypy_extensions"]
+sections = ["FUTURE", "TYPING", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+profile = "black"
+include_trailing_comma = true
+multi_line_output = 3
+indent = 4
+color_output = true
+
+[tool.mypy]
+# https://mypy.readthedocs.io/en/latest/config_file.html#using-a-pyproject-toml-file
+python_version = 3.9
+pretty = true
+show_traceback = true
+color_output = true
+
+allow_redefinition = false
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+ignore_missing_imports = true
+implicit_reexport = false
+no_implicit_optional = true
+show_column_numbers = true
+show_error_codes = true
+show_error_context = true
+strict_equality = true
+strict_optional = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
