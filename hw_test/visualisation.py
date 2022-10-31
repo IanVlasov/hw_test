@@ -108,5 +108,7 @@ def plot_results(
         for j in range(ncols):
             axes[i, j].scatter(data[:, j], y_true[:, i])
             axes[i, j].scatter(data[:, j], y_pred[:, i])
+            axes[i, j].grid()
+            axes[i, j].legend(["True", "Predicted"])
 
     return fig
