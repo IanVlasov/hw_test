@@ -40,25 +40,39 @@ def validate_model(
     estimator: Estimator,
     data: pd.DataFrame,
     target_columns: list[str],
+    metric: Callable[..., Union[np.float_, npt.NDArray[np.float_]]],
     show_plots: bool = False,
+    additional_metric_params: dict[str, Any] | None = None,
 ) -> None:
+    additional_metric_params = additional_metric_params if additional_metric_params else {}
     x_train, x_test, y_train, y_test = utils.make_split(data, target_columns=target_columns)
     estimator.fit(x_train, y_train)
 
     y_pred_train = estimator.predict(x_train)
     y_pred_test = estimator.predict(x_test)
 
-    train_score = r2_score(y_train, y_pred_train)
-    test_score = r2_score(y_test, y_pred_test)
+    train_score = r2_score(y_train, y_pred_train, **additional_metric_params)
+    test_score = r2_score(y_test, y_pred_test, **additional_metric_params)
 
-    scores = create_bootstrap_metrics(y_test, estimator.predict(x_test), r2_score)
-    ci = calculate_confidence_interval(scores)
-    is_metric_inside = bool(ci[0] < test_score < ci[1])
+    for i, target in enumerate(target_columns):
+        scores = create_bootstrap_metrics(
+            y_test[:, i],
+            y_pred_test[:, i],
+            metric=metric,
+            additional_metric_params=additional_metric_params,
+        )
+        ci = calculate_confidence_interval(scores)
+        is_metric_inside = bool(ci[0] < test_score[i] < ci[1])
+
+        print(
+            f"Train-score {target}: {round(train_score[i], 3)}\n"
+            f"Test-score {target}: {round(test_score[i], 3)}\n"
+            f"CI {target}: ({round(ci[0], 3)}, {round(ci[1], 3)}), {is_metric_inside}\n"
+        )
 
     print(
-        f"Train-score: {round(train_score, 3)}\n"
-        f"Test-score: {round(test_score, 3)}\n"
-        f"CI: ({round(ci[0], 3)}, {round(ci[1], 3)}), {is_metric_inside}"
+        f"Train-score mean: {round(train_score.mean(), 3)}\n"
+        f"Test-score mean: {round(test_score.mean(), 3)}\n"
     )
 
     if show_plots:
